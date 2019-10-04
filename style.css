@@ -34,7 +34,7 @@ ul {
 }
 
 
-#button {
+.button {
     position: absolute;
     display: inline-block;
     
