@@ -10,17 +10,30 @@ window.onload = function () {
   eButton.style.display = 'none';
 };
 
-function editTodo(id) {
-  console.log(`EDIT ${id}`);
-}
-
-function deleteTodo(id) {
+function searchList(id) {
   for (let a = 0; a < todoList.length; a += 1) {
     if (todoList[a].id === id) {
-      todoList.splice(a, 1);
+      return a;
     }
   }
+}
 
+function editTodo(id) {
+  eButton.style.display = 'initial';
+  console.log(todoList);
+  const position = searchList(id);
+  todoInputContent.value = todoList[position].content;
+}
+
+// eButton.addEventListener('click', () => {
+//   todoList[a].content = todoInputContent.value;
+//   eButton.style.display = 'none';
+//   showTodos();
+// });
+
+function deleteTodo(id) {
+  const position = searchList(id);
+  todoList.splice(position, 1);
   showTodos();
 }
 
