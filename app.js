@@ -2,84 +2,85 @@ const todoList = [];
 let todoID = 0;
 const todoInputContent = document.getElementById('addTodo');
 const addtodoButton = document.getElementById('addButton');
-const editButton = document.getElementById('eButton');
-
-console.log(todos);
+const eButton = document.getElementById('eButton');
+const cancelButton = document.getElementById('cancelButton');
 
 window.onload = function () {
   cancelButton.style.display = 'none';
   eButton.style.display = 'none';
 };
 
-
-function deleteTodo(element) {
-  console.log(element);
-
-  todoList.splice(element.dataset.id, 1);
-  console.log(todoList);
-  element.remove();
+function editTodo(id) {
+  console.log(`EDIT ${id}`);
 }
 
-function editTodo(element) {
-  console.log(element.innerText);
-  todoInputContent.value = element.dataset.content;
-
-  editButton.addEventListener('click', () => {
-    console.log(todoList);
-    todoList[element.dataset.id].content = todoInputContent.value;
-    console.log(todoList);
-    showTasks();
-  });
-}
-
-
-todoInputContent.addEventListener('keyup', (event) => {
-  if (event.keyCode === 13) {
-    addtodoButton.click();
+function deleteTodo(id) {
+  for (let a = 0; a < todoList.length; a += 1) {
+    if (todoList[a].id === id) {
+      todoList.splice(a, 1);
+    }
   }
-});
 
+  showTodos();
+}
 
-function showTasks() {
+function showTodos() {
   let todoHtml = '';
+  const fragments = [];
 
-  for (let i = 0; i < todoList.length; i++) {
+  for (let i = 0; i < todoList.length; i += 1) {
     const todo = todoList[i];
-
-    todoHtml += `<li class="todo" data-id="${todo.id}" data-content="${todo.content}">${todo.content}</li>
+    todoHtml = `<li class="todo">${todo.content}
           <div class="editDiv">
           <button class="edit">Edit</button>
           <button class="delete">Delete</button>
           </div>
+          </li>
           `;
+
+    const documentFragment = document.createRange().createContextualFragment(todoHtml);
+    documentFragment.querySelector('.delete').addEventListener('click', () => {
+      deleteTodo(todo.id);
+    });
+
+    documentFragment.querySelector('.edit').addEventListener('click', () => {
+      editTodo(todo.id);
+    });
+    fragments.push(documentFragment);
   }
 
-  document.getElementById('todos').innerHTML = todoHtml;
-
-  document.querySelector('.edit').addEventListener('click', () => {
-    console.log('EDIT');
+  const todosUL = document.getElementById('todos');
+  while (todosUL.firstChild) {
+    todosUL.firstChild.remove();
+  }
+  fragments.forEach((fragment) => {
+    document.getElementById('todos').appendChild(fragment);
   });
-  document.querySelector('.delete').addEventListener('click', () => {
-    console.log('DELETE');
-  });
-
 
   todoInputContent.value = '';
 }
+// SOLVE: WHY THE CONTENT ISN'T CLEAN ??
 
-addtodoButton.addEventListener('click', () => {
+const addTodo = () => {
   // Check if the input has been entered
   if (todoInputContent && todoInputContent.value !== '') {
-    // If input has been entered create a todo object with an unique id
     const todoObject = {
       id: todoID++,
       content: todoInputContent.value,
 
     };
 
-    // Add the todo to an array
+
     todoList.push(todoObject);
   }
-  // Display todos on the screen
-  showTasks();
+
+  showTodos();
+};
+
+todoInputContent.addEventListener('keyup', (event) => {
+  if (event.keyCode === 13) {
+    addTodo();
+  }
 });
+
+addtodoButton.addEventListener('click', addTodo());
