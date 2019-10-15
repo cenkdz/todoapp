@@ -25,11 +25,11 @@ function editTodo(id) {
   todoInputContent.value = todoList[position].content;
 }
 
-// eButton.addEventListener('click', () => {
-//   todoList[a].content = todoInputContent.value;
-//   eButton.style.display = 'none';
-//   showTodos();
-// });
+eButton.addEventListener('click', () => {
+  todoList[a].content = todoInputContent.value;
+  eButton.style.display = 'none';
+  showTodos();
+});
 
 function deleteTodo(id) {
   const position = searchList(id);
@@ -96,4 +96,6 @@ todoInputContent.addEventListener('keyup', (event) => {
   }
 });
 
-addtodoButton.addEventListener('click', addTodo());
+addtodoButton.addEventListener('click', () => {
+  addTodo();
+});
