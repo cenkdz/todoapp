@@ -1,49 +1,41 @@
 const todoList = [];
 let todoID = 0;
 const todoInputContent = document.getElementById('addTodo');
-const addtodoButton = document.getElementById('addButton');
+const addEditTodoButton = document.getElementById('add_edit_Button');
 const editButton = document.getElementById('eButton');
 const cancelButton = document.getElementById('cancelButton');
 let currentPosition;
 
 window.onload = function () {
-  this.hideCancelButton();
-  this.hideEditButton();
-  this.showAddButton();
+  cancelButton.style.display = 'none';
 };
-
-function showAddButton() {
-  addtodoButton.style.display = 'initial';
-}
-function hideAddButton() {
-  addtodoButton.style.display = 'none';
-}
-function showEditButton() {
-  editButton.style.display = 'initial';
-}
-function hideEditButton() {
-  editButton.style.display = 'none';
-}
-function showCancelButton() {
+function editMode() {
+  addEditTodoButton.innerText = 'EDIT';
   cancelButton.style.display = 'initial';
 }
-function hideCancelButton() {
-  cancelButton.style.display = 'none';
-}
 
+function addMode() {
+  addEditTodoButton.innerText = 'ADD';
+  cancelButton.style.display = 'none';
+  todoInputContent.value = '';
+}
 function searchList(id) {
+  console.log('THE ID');
+  console.log(id);
+  console.log(todoList);
   for (let a = 0; a < todoList.length; a += 1) {
     if (todoList[a].id === id) {
       return a;
     }
   }
+  // return todoList.indexOf(todoList[id]);
 }
 
 function editTodo(id) {
-  hideAddButton();
-  showCancelButton();
-  showEditButton();
+  editMode();
   currentPosition = searchList(id);
+  console.log(currentPosition);
+  console.log(todoList);
   todoInputContent.value = todoList[currentPosition].content;
 }
 function showTodos() {
@@ -82,27 +74,15 @@ function showTodos() {
   todoInputContent.value = '';
 }
 
-editButton.addEventListener('click', () => {
-  console.log(currentPosition);
-  hideEditButton();
-  hideCancelButton();
-  showAddButton();
-  todoList[currentPosition].content = todoInputContent.value;
-  todoInputContent.value = '';
-  showTodos();
-});
-
 function deleteTodo(id) {
   currentPosition = searchList(id);
+  console.log(currentPosition);
   todoList.splice(currentPosition, 1);
   showTodos();
 }
 
 cancelButton.addEventListener('click', () => {
-  hideCancelButton();
-  hideEditButton();
-  showAddButton();
-  todoInputContent.value = '';
+  addMode();
 });
 
 const addTodo = () => {
@@ -123,14 +103,20 @@ const addTodo = () => {
 
 todoInputContent.addEventListener('keyup', (event) => {
   if (event.keyCode === 13) {
-    if (addtodoButton.style.display === 'initial') {
+    if (addEditTodoButton.style.display === 'initial') {
       addTodo();
     } else if (editButton.style.display === 'initial') {
-      editButton.click();
+      editButton();
     }
   }
 });
 
-addtodoButton.addEventListener('click', () => {
-  addTodo();
+addEditTodoButton.addEventListener('click', () => {
+  if (addEditTodoButton.innerText === 'EDIT') {
+    todoList[currentPosition].content = todoInputContent.value;
+    addMode();
+    showTodos();
+  } else if (addEditTodoButton.innerText === 'ADD') {
+    addTodo();
+  }
 });
