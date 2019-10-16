@@ -7,8 +7,9 @@ const cancelButton = document.getElementById('cancelButton');
 let currentPosition;
 
 window.onload = function () {
-  cancelButton.style.display = 'none';
-  editButton.style.display = 'none';
+  this.hideCancelButton();
+  this.hideEditButton();
+  this.showAddButton();
 };
 
 function showAddButton() {
@@ -30,7 +31,6 @@ function hideCancelButton() {
   cancelButton.style.display = 'none';
 }
 
-
 function searchList(id) {
   for (let a = 0; a < todoList.length; a += 1) {
     if (todoList[a].id === id) {
@@ -38,7 +38,6 @@ function searchList(id) {
     }
   }
 }
-
 
 function editTodo(id) {
   hideAddButton();
@@ -99,16 +98,12 @@ function deleteTodo(id) {
   showTodos();
 }
 
-
 cancelButton.addEventListener('click', () => {
   hideCancelButton();
   hideEditButton();
   showAddButton();
   todoInputContent.value = '';
 });
-
-
-// SOLVE: WHY THE CONTENT ISN'T CLEAN ??
 
 const addTodo = () => {
   // Check if the input has been entered
@@ -128,7 +123,11 @@ const addTodo = () => {
 
 todoInputContent.addEventListener('keyup', (event) => {
   if (event.keyCode === 13) {
-    addTodo();
+    if (addtodoButton.style.display === 'initial') {
+      addTodo();
+    } else if (editButton.style.display === 'initial') {
+      editButton.click();
+    }
   }
 });
 
