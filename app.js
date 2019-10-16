@@ -10,6 +10,26 @@ window.onload = function () {
   eButton.style.display = 'none';
 };
 
+function showAddButton() {
+  addtodoButton.style.display = 'initial';
+}
+function hideAddButton() {
+  addtodoButton.style.display = 'none';
+}
+function showEditButton() {
+  eButton.style.display = 'initial';
+}
+function hideEditButton() {
+  eButton.style.display = 'none';
+}
+function showCancelButton() {
+  cancelButton.style.display = 'initial';
+}
+function hideCancelButton() {
+  cancelButton.style.display = 'none';
+}
+
+
 function searchList(id) {
   for (let a = 0; a < todoList.length; a += 1) {
     if (todoList[a].id === id) {
@@ -18,24 +38,36 @@ function searchList(id) {
   }
 }
 
+
 function editTodo(id) {
-  eButton.style.display = 'initial';
-  console.log(todoList);
+  hideAddButton();
+  showCancelButton();
+  showEditButton();
+
   const position = searchList(id);
   todoInputContent.value = todoList[position].content;
 }
-
-eButton.addEventListener('click', () => {
-  todoList[a].content = todoInputContent.value;
-  eButton.style.display = 'none';
-  showTodos();
-});
 
 function deleteTodo(id) {
   const position = searchList(id);
   todoList.splice(position, 1);
   showTodos();
 }
+
+eButton.addEventListener('click', () => {
+  hideEditButton();
+  hideCancelButton();
+  showAddButton();
+  todoInputContent.value = '';
+});
+
+cancelButton.addEventListener('click', () => {
+  hideCancelButton();
+  hideEditButton();
+  showAddButton();
+  todoInputContent.value = '';
+});
+
 
 function showTodos() {
   let todoHtml = '';
