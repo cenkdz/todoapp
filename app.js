@@ -2,12 +2,13 @@ const todoList = [];
 let todoID = 0;
 const todoInputContent = document.getElementById('addTodo');
 const addtodoButton = document.getElementById('addButton');
-const eButton = document.getElementById('eButton');
+const editButton = document.getElementById('eButton');
 const cancelButton = document.getElementById('cancelButton');
+let currentPosition;
 
 window.onload = function () {
   cancelButton.style.display = 'none';
-  eButton.style.display = 'none';
+  editButton.style.display = 'none';
 };
 
 function showAddButton() {
@@ -17,10 +18,10 @@ function hideAddButton() {
   addtodoButton.style.display = 'none';
 }
 function showEditButton() {
-  eButton.style.display = 'initial';
+  editButton.style.display = 'initial';
 }
 function hideEditButton() {
-  eButton.style.display = 'none';
+  editButton.style.display = 'none';
 }
 function showCancelButton() {
   cancelButton.style.display = 'initial';
@@ -43,32 +44,9 @@ function editTodo(id) {
   hideAddButton();
   showCancelButton();
   showEditButton();
-
-  const position = searchList(id);
-  todoInputContent.value = todoList[position].content;
+  currentPosition = searchList(id);
+  todoInputContent.value = todoList[currentPosition].content;
 }
-
-function deleteTodo(id) {
-  const position = searchList(id);
-  todoList.splice(position, 1);
-  showTodos();
-}
-
-eButton.addEventListener('click', () => {
-  hideEditButton();
-  hideCancelButton();
-  showAddButton();
-  todoInputContent.value = '';
-});
-
-cancelButton.addEventListener('click', () => {
-  hideCancelButton();
-  hideEditButton();
-  showAddButton();
-  todoInputContent.value = '';
-});
-
-
 function showTodos() {
   let todoHtml = '';
   const fragments = [];
@@ -104,6 +82,32 @@ function showTodos() {
 
   todoInputContent.value = '';
 }
+
+editButton.addEventListener('click', () => {
+  console.log(currentPosition);
+  hideEditButton();
+  hideCancelButton();
+  showAddButton();
+  todoList[currentPosition].content = todoInputContent.value;
+  todoInputContent.value = '';
+  showTodos();
+});
+
+function deleteTodo(id) {
+  currentPosition = searchList(id);
+  todoList.splice(currentPosition, 1);
+  showTodos();
+}
+
+
+cancelButton.addEventListener('click', () => {
+  hideCancelButton();
+  hideEditButton();
+  showAddButton();
+  todoInputContent.value = '';
+});
+
+
 // SOLVE: WHY THE CONTENT ISN'T CLEAN ??
 
 const addTodo = () => {
