@@ -2,42 +2,47 @@ const todoList = [];
 let todoID = 0;
 const todoInputContent = document.getElementById('addTodo');
 const addEditTodoButton = document.getElementById('add_edit_Button');
-const editButton = document.getElementById('eButton');
 const cancelButton = document.getElementById('cancelButton');
 let currentPosition;
+let mode;
+
+// WILL CHANGE CLASS(ADD/REMOVE)
 
 window.onload = function () {
-  cancelButton.style.display = 'none';
+  this.addMode();
+  cancelButton.className = 'hide';
 };
 function editMode() {
+  mode = 'edit';
   addEditTodoButton.innerText = 'EDIT';
-  cancelButton.style.display = 'initial';
+  // cancelButton.style.display = 'initial';
+  cancelButton.classList.remove('hide');
+  // cancelButton.className = 'show';
 }
 
 function addMode() {
+  mode = 'add';
   addEditTodoButton.innerText = 'ADD';
-  cancelButton.style.display = 'none';
+  // addEditTodoButton.className = 'add';
+  // cancelButton.style.display = 'none';
+  cancelButton.className = 'hide';
   todoInputContent.value = '';
 }
 function searchList(id) {
-  console.log('THE ID');
-  console.log(id);
-  console.log(todoList);
-  for (let a = 0; a < todoList.length; a += 1) {
-    if (todoList[a].id === id) {
-      return a;
-    }
-  }
-  // return todoList.indexOf(todoList[id]);
+  return todoList.findIndex((todoList) => todoList.id === id);
 }
 
 function editTodo(id) {
   editMode();
-  currentPosition = searchList(id);
-  console.log(currentPosition);
-  console.log(todoList);
-  todoInputContent.value = todoList[currentPosition].content;
+  if (id !== -1) {
+    currentPosition = searchList(id);
+    todoInputContent.value = todoList[currentPosition].content;
+  } else if (id === -1) {
+    alert('Error');
+    todoInputContent.value = '';
+  }
 }
+
 function showTodos() {
   let todoHtml = '';
   const fragments = [];
@@ -78,6 +83,7 @@ function deleteTodo(id) {
   currentPosition = searchList(id);
   console.log(currentPosition);
   todoList.splice(currentPosition, 1);
+  addMode();
   showTodos();
 }
 
@@ -86,37 +92,36 @@ cancelButton.addEventListener('click', () => {
 });
 
 const addTodo = () => {
-  // Check if the input has been entered
   if (todoInputContent && todoInputContent.value !== '') {
     const todoObject = {
       id: todoID++,
       content: todoInputContent.value,
 
     };
-
-
     todoList.push(todoObject);
   }
-
   showTodos();
 };
 
+function executeMode() {
+  if (mode === 'add') {
+    addTodo();
+  } else if (mode === 'edit') {
+    const response = confirm('Are you sure ?');
+    if (response === true) {
+      todoList[currentPosition].content = todoInputContent.value;
+      addMode();
+      showTodos();
+    }
+  }
+}
+
 todoInputContent.addEventListener('keyup', (event) => {
   if (event.keyCode === 13) {
-    if (addEditTodoButton.style.display === 'initial') {
-      addTodo();
-    } else if (editButton.style.display === 'initial') {
-      editButton();
-    }
+    executeMode();
   }
 });
 
 addEditTodoButton.addEventListener('click', () => {
-  if (addEditTodoButton.innerText === 'EDIT') {
-    todoList[currentPosition].content = todoInputContent.value;
-    addMode();
-    showTodos();
-  } else if (addEditTodoButton.innerText === 'ADD') {
-    addTodo();
-  }
+  executeMode();
 });
