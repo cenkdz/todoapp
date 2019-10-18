@@ -8,18 +8,18 @@ let mode;
 
 window.onload = function () {
   this.addMode();
-  cancelButton.className = 'hide';
+  cancelButton.classList.add('hide');
 };
 function editMode() {
   mode = 'edit';
-  addEditTodoButton.className = 'editCompleteB';
+  addEditTodoButton.classList.add('editCompleteB');
   cancelButton.classList.remove('hide');
 }
 
 function addMode() {
   mode = 'add';
-  addEditTodoButton.className = 'addCompleteB';
-  cancelButton.className = 'hide';
+  addEditTodoButton.classList.add('addCompleteB');
+  cancelButton.classList.add('hide');
   todoInputContent.value = '';
 }
 function searchList(id) {
