@@ -69,8 +69,6 @@ function showTodos() {
   fragments.forEach((fragment) => {
     document.getElementById('todos').appendChild(fragment);
   });
-
-  todoInputContent.value = '';
 }
 
 function deleteTodo(id) {
@@ -94,6 +92,7 @@ const addTodo = () => {
     todoList.push(todoObject);
   }
   showTodos();
+  todoInputContent.value = '';
 };
 
 function executeMode() {
@@ -103,12 +102,17 @@ function executeMode() {
     }
     addTodo();
   } else if (mode === 'edit') {
-    const response = confirm('Are you sure ?');
-    if (response === true) {
-      todoList[currentPosition].content = todoInputContent.value;
-      addMode();
-      showTodos();
+    if (todoInputContent.value !== todoList[currentPosition].content) {
+      const response = confirm('Are you sure ?');
+      if (response === true) {
+        todoList[currentPosition].content = todoInputContent.value;
+        addMode();
+        showTodos();
+      }
+    } else if (todoInputContent.value === todoList[currentPosition].content) {
+      alert('No change in input!');
     }
+    showTodos();
   }
 }
 
