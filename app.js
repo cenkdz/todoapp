@@ -49,8 +49,7 @@ function showTodos() {
 
   for (let i = 0; i < todoList.length; i += 1) {
     const todo = todoList[i];
-    todoHtml = `<li class="todo">${todo.content}
-          <div class="editDiv">
+    todoHtml = `<li class="todo">${todo.content}<div class="editDiv">
           <button class="edit">Edit</button>
           <button class="delete">Delete</button>
           </div>
