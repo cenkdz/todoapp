@@ -6,25 +6,19 @@ const cancelButton = document.getElementById('cancelButton');
 let currentPosition;
 let mode;
 
-// WILL CHANGE CLASS(ADD/REMOVE)
-
 window.onload = function () {
   this.addMode();
   cancelButton.className = 'hide';
 };
 function editMode() {
   mode = 'edit';
-  addEditTodoButton.innerText = 'EDIT';
-  // cancelButton.style.display = 'initial';
+  addEditTodoButton.className = 'editCompleteB';
   cancelButton.classList.remove('hide');
-  // cancelButton.className = 'show';
 }
 
 function addMode() {
   mode = 'add';
-  addEditTodoButton.innerText = 'ADD';
-  // addEditTodoButton.className = 'add';
-  // cancelButton.style.display = 'none';
+  addEditTodoButton.className = 'addCompleteB';
   cancelButton.className = 'hide';
   todoInputContent.value = '';
 }
@@ -81,7 +75,6 @@ function showTodos() {
 
 function deleteTodo(id) {
   currentPosition = searchList(id);
-  console.log(currentPosition);
   todoList.splice(currentPosition, 1);
   addMode();
   showTodos();
@@ -105,6 +98,9 @@ const addTodo = () => {
 
 function executeMode() {
   if (mode === 'add') {
+    if (todoInputContent.value === '') {
+      alert('Please write a todo.');
+    }
     addTodo();
   } else if (mode === 'edit') {
     const response = confirm('Are you sure ?');

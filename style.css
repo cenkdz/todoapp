@@ -1,5 +1,5 @@
 body {
-    background-color: #000000;
+    background-color: #040101;
 }
 
 h2,h3 {
@@ -55,12 +55,12 @@ li {
   .hide {
     display: none;
   }
-  
-  .add{
+
+  .addCompleteB::before{
     content: 'ADD';
   }
 
-  .edit {
+  .editCompleteB::before {
       content: 'EDIT';
   }
   
