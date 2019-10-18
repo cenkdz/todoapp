@@ -9,6 +9,11 @@ let mode;
 window.onload = function () {
   this.addMode();
 };
+
+function clearInput() {
+  todoInputContent.value = '';
+}
+
 function editMode() {
   mode = 'edit';
   addEditTodoButton.classList.remove('addCompleteB');
@@ -21,7 +26,7 @@ function addMode() {
   cancelButton.classList.add('hide');
   addEditTodoButton.classList.remove('editCompleteB');
   addEditTodoButton.classList.add('addCompleteB');
-  todoInputContent.value = '';
+  clearInput();
 }
 function searchList(id) {
   return todoList.findIndex((todoList) => todoList.id === id);
@@ -34,7 +39,7 @@ function editTodo(id) {
     todoInputContent.value = todoList[currentPosition].content;
   } else {
     alert('Error');
-    todoInputContent.value = '';
+    clearInput();
   }
 }
 
@@ -93,7 +98,7 @@ const addTodo = () => {
     todoList.push(todoObject);
   }
   showTodos();
-  todoInputContent.value = '';
+  clearInput();
 };
 
 function executeMode() {
