@@ -46,14 +46,6 @@ li {
       background: #BDBDBD;
       transition: all 0.75s;
       font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  };
-
-  .show {
-      display: initial;
-  }
-
-  .hide {
-    display: none;
   }
 
   .addCompleteB::before{
@@ -62,5 +54,9 @@ li {
 
   .editCompleteB::before {
       content: 'EDIT';
+  }
+
+  .hide {
+      display: none;
   }
   

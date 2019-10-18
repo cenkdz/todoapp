@@ -8,18 +8,19 @@ let mode;
 
 window.onload = function () {
   this.addMode();
-  cancelButton.classList.add('hide');
 };
 function editMode() {
   mode = 'edit';
+  addEditTodoButton.classList.remove('addCompleteB');
   addEditTodoButton.classList.add('editCompleteB');
   cancelButton.classList.remove('hide');
 }
 
 function addMode() {
   mode = 'add';
-  addEditTodoButton.classList.add('addCompleteB');
   cancelButton.classList.add('hide');
+  addEditTodoButton.classList.remove('editCompleteB');
+  addEditTodoButton.classList.add('addCompleteB');
   todoInputContent.value = '';
 }
 function searchList(id) {
@@ -31,7 +32,7 @@ function editTodo(id) {
   if (id !== -1) {
     currentPosition = searchList(id);
     todoInputContent.value = todoList[currentPosition].content;
-  } else if (id === -1) {
+  } else {
     alert('Error');
     todoInputContent.value = '';
   }
