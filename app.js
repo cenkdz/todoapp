@@ -29,17 +29,26 @@ function addMode() {
   clearInput();
 }
 function searchList(id) {
-  return todoList.findIndex((todoList) => todoList.id === id);
+  return todoList.findIndex((todo) => todo.id === id);
 }
 
 function editTodo(id) {
   editMode();
+  currentPosition = searchList(id);
   if (id !== -1) {
-    currentPosition = searchList(id);
     todoInputContent.value = todoList[currentPosition].content;
   } else {
     alert('Error');
     clearInput();
+  }
+}
+
+function deleteTodo(id) {
+  const response = confirm('Are you sure ?');
+  if (response === true) {
+    todoList.splice(searchList(id), 1);
+    addMode();
+    showTodos();
   }
 }
 
@@ -76,57 +85,45 @@ function showTodos() {
   });
 }
 
-function deleteTodo(id) {
-  currentPosition = searchList(id);
-  todoList.splice(currentPosition, 1);
-  addMode();
-  showTodos();
+const addTodo = () => {
+  const cleanedInput = todoInputContent.value.replace(/^\s*/, '');
+  if (cleanedInput && cleanedInput !== '') {
+    const todoObject = {
+      id: todoID++,
+      content: cleanedInput,
+
+    };
+    todoList.push(todoObject);
+    showTodos();
+  }
+
+  clearInput();
+};
+
+function completeAction() {
+  if (mode === 'add') {
+    addTodo();
+  } else if (mode === 'edit') {
+    if (todoInputContent.value !== todoList[currentPosition].content) {
+      todoList[currentPosition].content = todoInputContent.value;
+      addMode();
+      showTodos();
+    }
+    showTodos();
+  }
 }
 
 cancelButton.addEventListener('click', () => {
   addMode();
 });
 
-const addTodo = () => {
-  if (todoInputContent && todoInputContent.value !== '') {
-    const todoObject = {
-      id: todoID++,
-      content: todoInputContent.value,
-
-    };
-    todoList.push(todoObject);
-  }
-  showTodos();
-  clearInput();
-};
-
-function executeMode() {
-  if (mode === 'add') {
-    if (todoInputContent.value === '') {
-      alert('Please write a todo.');
-    }
-    addTodo();
-  } else if (mode === 'edit') {
-    if (todoInputContent.value !== todoList[currentPosition].content) {
-      const response = confirm('Are you sure ?');
-      if (response === true) {
-        todoList[currentPosition].content = todoInputContent.value;
-        addMode();
-        showTodos();
-      }
-    } else if (todoInputContent.value === todoList[currentPosition].content) {
-      alert('No change in input!');
-    }
-    showTodos();
-  }
-}
 
 todoInputContent.addEventListener('keyup', (event) => {
   if (event.keyCode === 13) {
-    executeMode();
+    completeAction();
   }
 });
 
 addEditTodoButton.addEventListener('click', () => {
-  executeMode();
+  completeAction();
 });
