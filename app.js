@@ -10,6 +10,12 @@ window.onload = function () {
   this.addMode();
 };
 
+function sanitizeHTML(string) {
+  const temp = document.createElement('div');
+  temp.textContent = string;
+  return temp.innerHTML;
+}
+
 function clearInput() {
   todoInputContent.value = '';
 }
@@ -86,7 +92,8 @@ function showTodos() {
 }
 
 const addTodo = () => {
-  const cleanedInput = todoInputContent.value.replace(/^\s*/, '');
+  let cleanedInput = todoInputContent.value.replace(/^\s*/, '');
+  cleanedInput = sanitizeHTML(cleanedInput);
   if (cleanedInput && cleanedInput !== '') {
     const todoObject = {
       id: todoID++,
