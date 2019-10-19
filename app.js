@@ -112,7 +112,7 @@ function completeAction() {
     addTodo();
   } else if (mode === 'edit') {
     if (todoInputContent.value !== todoList[currentPosition].content) {
-      todoList[currentPosition].content = todoInputContent.value;
+      todoList[currentPosition].content = sanitizeHTML(todoInputContent.value);
       addMode();
       showTodos();
     }
