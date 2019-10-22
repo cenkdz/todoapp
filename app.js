@@ -37,9 +37,6 @@ function addMode() {
   addEditTodoButton.classList.add('addCompleteB');
   clearInput();
 }
-function searchList(id) {
-  return todoList.findIndex((todo) => todo.id === id);
-}
 
 function editTodo(id) {
   editMode();
@@ -88,18 +85,23 @@ function showTodosPOST()
 
 function deleteTodoPOST(id)
 {
+  const response = confirm('Are you sure ?');
+  if (response === true) {
   axios.post('http://localhost/api/product/delete.php',
   {
     "id" : id
   })
   .then(function (response) {
     console.log(response);
+    showTodosPOST();
   })
   .catch(function (error) {
     console.log(error);
+
   });
 
-  showTodosPOST();
+}
+ 
 }
 
 function readOneTodoPOST(id)
@@ -124,6 +126,7 @@ function editTodoPOST(body){
   axios.post('http://localhost/api/product/update.php', body)
   .then(function (response) {
     console.log(response);
+    showTodosPOST();
   })
   .catch(function (error) {
     console.log(error);
@@ -137,8 +140,14 @@ const addTodo = () => {
     const todoObject = {
       content: cleanedInput
     };
-    axios.post('http://localhost/api/product/create.php', JSON.stringify(todoObject));
-    showTodosPOST();
+    axios.post('http://localhost/api/product/create.php', JSON.stringify(todoObject))
+    .then(function (response) {
+      console.log(response);
+      showTodosPOST();
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 
   clearInput();
@@ -154,8 +163,8 @@ function completeAction() {
         "content" : sanitizeHTML(todoInputContent.value)
       });
       addMode();
-      showTodosPOST();
     }
+    
   }
 }
 
