@@ -1,5 +1,3 @@
-let todoList = [];
-let todoID = 1;
 const todoInputContent = document.getElementById('addTodo');
 const addEditTodoButton = document.getElementById('add_edit_Button');
 const cancelButton = document.getElementById('cancelButton');
@@ -85,8 +83,8 @@ function showTodosPOST()
 
 function deleteTodoPOST(id)
 {
-  const response = confirm('Are you sure ?');
-  if (response === true) {
+  const userResponse = confirm('Are you sure ?');
+  if (userResponse === true) {
   axios.post('http://localhost/api/product/delete.php',
   {
     "id" : id
@@ -131,7 +129,7 @@ function editTodoPOST(body){
   .catch(function (error) {
     console.log(error);
   });
-};
+}
 
 const addTodo = () => {
   let cleanedInput = todoInputContent.value.replace(/^\s*/, '');
