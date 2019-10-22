@@ -3,3 +3,13 @@ b1.jpg
 package-lock.json
 package.json
 .vscode/launch.json
+api/product/update.php
+api/product/search.php
+api/product/read_one.php
+api/product/read.php
+api/product/delete.php
+api/product/create.php
+api/objects/todo.php
+api/config/database.php
+.DS_Store
+.DS_Store

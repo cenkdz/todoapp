@@ -1,9 +1,9 @@
-const todoList = [];
-let todoID = 0;
+let todoList = [];
+let todoID = 1;
 const todoInputContent = document.getElementById('addTodo');
 const addEditTodoButton = document.getElementById('add_edit_Button');
 const cancelButton = document.getElementById('cancelButton');
-let currentPosition;
+let currentID;
 let mode;
 
 window.onload = function () {
@@ -13,6 +13,8 @@ window.onload = function () {
 function sanitizeHTML(string) {
   const temp = document.createElement('div');
   temp.textContent = string;
+  console.log('adad');
+
   return temp.innerHTML;
 }
 
@@ -29,6 +31,7 @@ function editMode() {
 
 function addMode() {
   mode = 'add';
+  showTodosPOST();
   cancelButton.classList.add('hide');
   addEditTodoButton.classList.remove('editCompleteB');
   addEditTodoButton.classList.add('addCompleteB');
@@ -40,30 +43,18 @@ function searchList(id) {
 
 function editTodo(id) {
   editMode();
-  currentPosition = searchList(id);
-  if (id !== -1) {
-    todoInputContent.value = todoList[currentPosition].content;
-  } else {
-    alert('Error');
-    clearInput();
-  }
+  currentID = id;
+  readOneTodoPOST(id);
 }
-
-function deleteTodo(id) {
-  const response = confirm('Are you sure ?');
-  if (response === true) {
-    todoList.splice(searchList(id), 1);
-    addMode();
-    showTodos();
-  }
-}
-
-function showTodos() {
-  let todoHtml = '';
+function showTodosPOST()
+{
+  axios.post('http://localhost/api/product/read.php')
+  .then(function (response) {
+    let todoHtml = '';
   const fragments = [];
 
-  for (let i = 0; i < todoList.length; i += 1) {
-    const todo = todoList[i];
+  for (let i = 0; i < response.data.records.length; i += 1) {
+    const todo = response.data.records[i];
     todoHtml = `<li class="todo">${todo.content}<div class="editDiv">
           <button class="edit">Edit</button>
           <button class="delete">Delete</button>
@@ -73,7 +64,7 @@ function showTodos() {
 
     const documentFragment = document.createRange().createContextualFragment(todoHtml);
     documentFragment.querySelector('.delete').addEventListener('click', () => {
-      deleteTodo(todo.id);
+      deleteTodoPOST(todo.id);
     });
 
     documentFragment.querySelector('.edit').addEventListener('click', () => {
@@ -89,19 +80,65 @@ function showTodos() {
   fragments.forEach((fragment) => {
     document.getElementById('todos').appendChild(fragment);
   });
+  })
+  .catch(function (error) {
+    return console.log(error);
+  });
 }
+
+function deleteTodoPOST(id)
+{
+  axios.post('http://localhost/api/product/delete.php',
+  {
+    "id" : id
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+  showTodosPOST();
+}
+
+function readOneTodoPOST(id)
+{
+  axios.get('http://localhost/api/product/read_one.php?id='+id)
+  .then(function (response) {
+    // handle success
+    console.log(response);
+    todoInputContent.value =response.data.content;
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  .finally(function () {
+    // always executed
+  });
+}
+
+function editTodoPOST(body){
+  console.log(body);
+  axios.post('http://localhost/api/product/update.php', body)
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+};
 
 const addTodo = () => {
   let cleanedInput = todoInputContent.value.replace(/^\s*/, '');
   cleanedInput = sanitizeHTML(cleanedInput);
   if (cleanedInput && cleanedInput !== '') {
     const todoObject = {
-      id: todoID++,
-      content: cleanedInput,
-
+      content: cleanedInput
     };
-    todoList.push(todoObject);
-    showTodos();
+    axios.post('http://localhost/api/product/create.php', JSON.stringify(todoObject));
+    showTodosPOST();
   }
 
   clearInput();
@@ -111,12 +148,14 @@ function completeAction() {
   if (mode === 'add') {
     addTodo();
   } else if (mode === 'edit') {
-    if (todoInputContent.value !== todoList[currentPosition].content) {
-      todoList[currentPosition].content = sanitizeHTML(todoInputContent.value);
+    if (todoInputContent) {
+      editTodoPOST({
+        "id" : currentID,
+        "content" : sanitizeHTML(todoInputContent.value)
+      });
       addMode();
-      showTodos();
+      showTodosPOST();
     }
-    showTodos();
   }
 }
 
