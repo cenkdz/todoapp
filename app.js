@@ -1,7 +1,7 @@
 const todoInputContent = document.getElementById('addTodo');
 const addEditTodoButton = document.getElementById('add_edit_Button');
 const cancelButton = document.getElementById('cancelButton');
-let currentID;
+let selectedTodoID;
 let mode;
 let todoList = [];
 
@@ -22,70 +22,84 @@ function editMode() {
 
 function addMode() {
   mode = 'add';
-  showTodosPOST();
+  showTodos();
   cancelButton.classList.add('hide');
   addEditTodoButton.classList.remove('editCompleteB');
   addEditTodoButton.classList.add('addCompleteB');
   clearInput();
 }
 
-function editTodo(id) {
-  editMode();
-  currentID = id;
-  readOneTodoPOST(id);
-}
-function showTodosPOST() {
-  axios.post('http://localhost/api/product/read.php')
+function readOneTodo(id) {
+  axios.get(`http://localhost/api/product/read_one.php?id=${id}`)
     .then((response) => {
-      todoList = [...response.data.records];
-      console.log(todoList);
-      let todoHtml = '';
-      const fragments = [];
+      console.log(response);
+      todoInputContent.value = response.data.content;
+    })
+    .catch((error) => {
+      console.log(error);
+      alert('Todo couldn\'t be edited!');
+    });
+}
 
-      todoList.forEach((todo) => {
-        todoHtml = `<li class="todo">${todo.content}<div class="editDiv">
+function getSelectedTodo(id) {
+  editMode();
+  selectedTodoID = id;
+  readOneTodo(id);
+}
+
+function getTodos() {
+  return axios.get('http://localhost/api/product/read.php').then((response) => response.data.records);
+}
+
+function showTodos() {
+  getTodos().then((records) => {
+    if (records !== undefined) {
+      todoList = [...records];
+    } else {
+      todoList = [];
+    }
+
+    let todoHtml = '';
+    const fragments = [];
+
+    todoList.forEach((todo) => {
+      todoHtml = `<li class="todo">${todo.content}<div class="editDiv">
           <button class="edit">Edit</button>
           <button class="delete">Delete</button>
           </div>
           </li>
           `;
 
-        const documentFragment = document.createRange().createContextualFragment(todoHtml);
-        documentFragment.querySelector('.delete').addEventListener('click', () => {
-          deleteTodoPOST(todo.id);
-        });
-
-        documentFragment.querySelector('.edit').addEventListener('click', () => {
-          editTodo(todo.id);
-        });
-        fragments.push(documentFragment);
+      const documentFragment = document.createRange().createContextualFragment(todoHtml);
+      documentFragment.querySelector('.delete').addEventListener('click', () => {
+        deleteTodo(todo.id);
       });
 
-
-      const todosUL = document.getElementById('todos');
-      while (todosUL.firstChild) {
-        todosUL.firstChild.remove();
-      }
-      fragments.forEach((fragment) => {
-        document.getElementById('todos').appendChild(fragment);
+      documentFragment.querySelector('.edit').addEventListener('click', () => {
+        getSelectedTodo(todo.id);
       });
-    })
-    .catch((error) => {
-      console.log(error);
-      document.getElementById('todos').firstChild.remove();
+      fragments.push(documentFragment);
     });
+
+    const todosUL = document.getElementById('todos');
+    while (todosUL.firstChild) {
+      todosUL.firstChild.remove();
+    }
+    fragments.forEach((fragment) => {
+      document.getElementById('todos').appendChild(fragment);
+    });
+  });
 }
 
-
-function deleteTodoPOST(id) {
+function deleteTodo(id) {
   const userResponse = confirm('Are you sure ?');
   if (userResponse === true) {
     axios.post('http://localhost/api/product/delete.php',
-      {
+      JSON.stringify({
         id,
-      })
+      }))
       .then((response) => {
-        showTodosPOST();
+        showTodos();
         console.log(response);
       })
       .catch((error) => {
@@ -94,25 +108,12 @@ function deleteTodoPOST(id) {
   }
 }
 
-function readOneTodoPOST(id) {
-  axios.get(`http://localhost/api/product/read_one.php?id=${id}`)
-    .then((response) => {
-      console.log(response);
-      todoInputContent.value = response.data.content;
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-    .finally(() => {
-    });
-}
-
-function editTodoPOST(body) {
+function editTodo(body) {
   console.log(body);
   axios.post('http://localhost/api/product/update.php', body)
     .then((response) => {
       console.log(response);
-      showTodosPOST();
+      showTodos();
     })
     .catch((error) => {
       console.log(error);
@@ -120,7 +121,7 @@ function editTodoPOST(body) {
 }
 
 const addTodo = () => {
-  const cleanedInput = todoInputContent.value.replace(/^\s*/, '').trim();
+  const cleanedInput = todoInputContent.value.replace(/  +/g, '');
   if (cleanedInput && cleanedInput !== '') {
     const todoObject = {
       content: cleanedInput,
@@ -128,7 +129,7 @@ const addTodo = () => {
     axios.post('http://localhost/api/product/create.php', JSON.stringify(todoObject))
       .then((response) => {
         console.log(response);
-        showTodosPOST();
+        showTodos();
       })
       .catch((error) => {
         console.log(error);
@@ -143,10 +144,10 @@ function completeAction() {
     addTodo();
   } else if (mode === 'edit') {
     if (todoInputContent) {
-      editTodoPOST({
-        id: currentID,
+      editTodo(JSON.stringify({
+        id: selectedTodoID,
         content: todoInputContent.value,
-      });
+      }));
       addMode();
     }
   }
@@ -155,7 +156,6 @@ function completeAction() {
 cancelButton.addEventListener('click', () => {
   addMode();
 });
-
 
 todoInputContent.addEventListener('keyup', (event) => {
   if (event.keyCode === 13) {
