@@ -1,9 +1,8 @@
 import axios from 'axios';
-// import { isFunction } from 'util';
-import Source from './Source';
+import Utils from '../services/Utils';
 
 const UpdateAccount = {
-
+// Render html
   render: async () => {
     const view = `
       <h2>Update Account</h2>
@@ -11,43 +10,51 @@ const UpdateAccount = {
               <label for="firstname">Firstname</label>
               <input type="text" name="firstname" id="firstname" required/>
           </div>
-
           <div>
               <label for="lastname">Lastname</label>
               <input type="text" name="lastname" id="lastname" required/>
           </div>
-
           <div>
               <label for="email">Email</label>
               <input type="email" name="email" id="email" required/>
           </div>
-
           <div>
               <label for="password">Password</label>
               <input type="password" name="password" id="password" />
           </div>
-
           <button id="updateAccountB" class='btn btn-primary'>
               Save Changes
           </button>
+          <br>
+          <br>
+          <br>
+
+          <div id="responseDiv">
+          </div>
           `;
     return view;
   },
   after_render: async () => {
+    // All functions related with UpdateAccount page.
+
     const firstnameI = document.getElementById('firstname');
     const lastnameI = document.getElementById('lastname');
     const emailI = document.getElementById('email');
     const passwordI = document.getElementById('password');
-    const jwt = Source.getCookie('jwt');
+    const jwt = Utils.getCookie('jwt');
     const updateB = document.getElementById('updateAccountB');
+    const responseDiv = document.getElementById('responseDiv');
+    let html;
 
-    axios.post('http://localhost/api/validate_token.php', JSON.stringify({ jwt }))
-      .then((response) => {
-        console.log(response);
-        Source.loggedinNavbar();
-        firstnameI.value = response.data.data.firstname;
-        lastnameI.value = response.data.data.lastname;
-        emailI.value = response.data.data.email;
+    // Asks for validation from the server to be able to update account information
+    axios.post('http://localhost/todoapi/api/validate_token.php', JSON.stringify({ jwt }))
+      .then((vResponse) => {
+        const navHome = document.getElementById('homeLink');
+        navHome.innerText = `${vResponse.data.data.firstname} ${vResponse.data.data.lastname}`;
+        Utils.loggedinNavbar();
+        firstnameI.value = vResponse.data.data.firstname;
+        lastnameI.value = vResponse.data.data.lastname;
+        emailI.value = vResponse.data.data.email;
 
         updateB.addEventListener('click', () => {
           const newUserObj = {
@@ -57,20 +64,21 @@ const UpdateAccount = {
             password: passwordI.value,
             jwt,
           };
-          axios.post('http://localhost/api/update_user.php', JSON.stringify(newUserObj))
-            .then((response) => {
-              console.log(response);
-              alert('Successfully updated!!');
-              Source.setCookie('jwt', response.data.jwt, 1);
+          axios.post('http://localhost/todoapi/api/update_user.php', JSON.stringify(newUserObj))
+            .then((uResponse) => {
+              html = '<h2>You have successfully updated your credentials.</h2>';
+              responseDiv.innerHTML = html;
+              Utils.setCookie('jwt', uResponse.data.jwt, 1);
             })
-            .catch((error) => {
-              alert('Unable to update:/');
-              console.log(error);
+            .catch(() => {
+              html = '<h2>We were unable to update your account.</h2>';
+              responseDiv.innerHTML = html;
             });
         });
       })
-      .catch((error) => {
-        alert(error);
+      .catch(() => {
+        html = '<h2>You are not authorized.</h2>';
+        responseDiv.innerHTML = html;
         window.location.href = '/#/';
       });
   },

@@ -1,14 +1,13 @@
 import HomePage from 'components/HomePage';
 import Welcome from 'components/Welcome';
 import Login from 'components/Login';
-import 'todoStyle.css';
-import Home from 'components/Home.js';
-import Error404 from 'components/Error404.js';
-import PostShow from 'components/PostShow.js';
-import Register from 'components/Register.js';
-import Navbar from 'components/Navbar.js';
-import Utils from 'services/Utils.js';
+import Home from 'components/Home';
+import Error404 from 'components/Error404';
+import Register from 'components/Register';
+import Navbar from 'components/Navbar';
+import Utils from 'services/Utils';
 import UpdateAccount from 'components/UpdateAccount';
+import 'todoStyle.css';
 
 HomePage();
 
@@ -17,7 +16,6 @@ const routes = {
   '/': Welcome,
   '/home': Home,
   '/updateaccount': UpdateAccount,
-  '/p/:id': PostShow,
   '/register': Register,
   '/login': Login,
 };

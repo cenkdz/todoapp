@@ -1,14 +1,15 @@
 import axios from 'axios';
-import Source from './Source';
+import Utils from '../services/Utils';
 
 const Login = {
   render: async () => {
+    // Render html
     const view = `
             <div class="login">
                 <h1>Login</h1>
                 <div>
                 <label for='email'>Email address</label>
-                <input type='email'id='email' name='email' placeholder='Enter email'>
+                <input type='email' id='email' name='email' placeholder='Enter email'>
             </div>
  
             <div>
@@ -22,29 +23,34 @@ const Login = {
     return view;
   },
   after_render: async () => {
-    Source.setCookie('jwt', '', 1);
+    // After the page is rendered all the functions are stated afterwards
+
+    // Removes jwt
+    Utils.setCookie('jwt', '', 1);
 
     const emailI = document.getElementById('email');
     const passwordI = document.getElementById('password');
     const loginB = document.getElementById('loginB');
 
 
+    // Called when user clicks on login button
     loginB.addEventListener('click', () => {
       const loginObject = {
         email: emailI.value,
         password: passwordI.value,
       };
-
-      axios.post('http://localhost/api/login.php', JSON.stringify(loginObject))
+      // Sends a request to the database with the username and password
+      // If username and password is valid
+      // Returns a user-specific genereated jwt token and sets the token as a cookie
+      axios.post('http://localhost/todoapi/api/login.php', JSON.stringify(loginObject))
         .then((response) => {
-          console.log(response);
-          Source.setCookie('jwt', response.data.jwt, 1);
+          // Setting the token as a cookie
+          Utils.setCookie('jwt', response.data.jwt, 1);
           alert('Successful login ::)');
           window.location.href = '/#/home/';
         })
         .catch((error) => {
-          alert('Unsuccessful login :/');
-          console.log(error);
+          alert(`Unsuccessful login :/${error}`);
         });
     });
   },

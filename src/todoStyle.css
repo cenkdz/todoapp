@@ -14,12 +14,16 @@ body {
     width: 90%;
 }
 
+#addTodo[placeholder] {
+    text-align: center;
+}
+
 h1,
 h2,
 label {
     border-color: #121212;
     background-color: #121212;
-    color: #818181;
+    color: #f2f2f2;
 }
 
 ul {
@@ -63,7 +67,7 @@ button {
 #navbar {
     width: 100%;
     overflow: hidden;
-    background-color: #333;
+    background-color: #121212;;
 }
   
 #navbar a {

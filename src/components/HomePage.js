@@ -8,7 +8,7 @@ function HomePage() {
     </div>
     </body>
     `;
-
+  window.document.title = 'Todo Application';
   document.body.insertAdjacentHTML('beforeend', homeHtml);
 }
 

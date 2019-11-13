@@ -1,50 +1,58 @@
 import axios from 'axios';
-import Source from './Source';
+import Utils from '../services/Utils';
 
 const Home = {
+  // Render html
   render: async () => {
     const view = `
-        <div class= "container">
-        <div class="addDiv">
-            <h1>TODO APP</h1>
+        <div>
             <input id="addTodo" type="text" placeholder="Please add a todo.">
         </div>
-        <div class="choiceDiv">
             <button type="submit" id="add_edit_Button"></button>
             <button id="cancelButton" class="hide">CANCEL</button>
-        </div>
-        <h2>Your To-Dos</h2>
-        <div class="choiceDiv">
-            <ul id="todos">
-            </ul>
-        </div>
-    </div>
+            <h2>Your To-Dos</h2>
+            <ul id="todos"></ul>
         `;
     return view;
   },
   after_render: async () => {
-    const jwt = Source.getCookie('jwt');
-    let currentUserId = '';
+    // After the page is rendered all the functions are stated afterwards
 
-    axios.post('http://localhost/api/validate_token.php', JSON.stringify({ jwt }))
+    const jwt = Utils.getCookie('jwt');
+
+    // Validate user token.
+    axios.post('http://localhost/todoapi/api/validate_token.php', JSON.stringify({ jwt }))
+    // If it's valid continue...
       .then((response) => {
-        console.log(response);
-        Source.loggedinNavbar();
-        currentUserId = response.data.data.id;
+        // Change navbar element visibilities.
+        Utils.loggedinNavbar();
 
+        const navHome = document.getElementById('homeLink');
+        navHome.innerText = `${response.data.data.firstname} ${response.data.data.lastname}`;
+
+        // Setting the needed variables.
+        let currentUserId = '';
         let selectedTodoID;
         let mode;
         let todoList = [];
+
+        // Getting the elements.
         const todoInputContent = document.getElementById('addTodo');
         const addEditTodoButton = document.getElementById('add_edit_Button');
         const cancelButton = document.getElementById('cancelButton');
 
+        // Assigning the loggedin user_id according to the response.
+        currentUserId = response.data.data.id;
+
+        // Add mode activated on page load.
         addMode();
 
         function clearInput() {
           todoInputContent.value = '';
         }
 
+        // Called when user clicks the edit button.
+        // Adjusts button appeareance(visibility,text) accordingly.
         function editMode() {
           mode = 'edit';
           addEditTodoButton.classList.remove('addCompleteB');
@@ -60,17 +68,17 @@ const Home = {
           addEditTodoButton.classList.add('addCompleteB');
           clearInput();
         }
-
+        // Sets the id of the clicked todo
         function getSelectedTodo(id) {
           editMode();
           selectedTodoID = id;
           readOneTodo(id);
         }
-
+        // Gets all the todos from the database
         function getTodos() {
           return axios.get(`http://localhost/todoapi/api/product/read.php?user_id=${currentUserId}`).then((response) => response.data.records);
         }
-
+        // Called when user clicks the delete button and deletes it from the database
         function deleteTodo(id) {
           const userResponse = confirm('Are you sure ?');
           if (userResponse === true) {
@@ -87,7 +95,7 @@ const Home = {
               });
           }
         }
-
+        // Called when the user changes the todo and presses edit button(the one below input)
         function editTodo(body) {
           console.log(body);
           axios.post('http://localhost/todoapi/api/product/update.php', body)
@@ -99,7 +107,7 @@ const Home = {
               console.log(error);
             });
         }
-
+        // Adds the todo to the database
         const addTodo = (todoObject) => {
           axios.post('http://localhost/todoapi/api/product/create.php', JSON.stringify(todoObject))
             .then((response) => {
@@ -110,7 +118,7 @@ const Home = {
               console.log(error);
             });
         };
-
+        // Prints all todos to the page
         function showTodos() {
           getTodos().then((records) => {
             if (records !== undefined) {
@@ -150,7 +158,8 @@ const Home = {
             });
           });
         }
-
+        // Called when user presses edit button and gets the clicked todo from the database
+        // into the input field.
         function readOneTodo(id) {
           axios.get(`http://localhost/todoapi/api/product/read_one.php?id=${id}`)
             .then((response) => {
@@ -162,7 +171,7 @@ const Home = {
               alert('Todo couldn\'t be edited!');
             });
         }
-
+        // Decides which function is going to be executed according to the current mode
         function completeAction() {
           if (mode === 'add') {
             const cleanedInput = todoInputContent.value.replace(/  +/g, '');
@@ -200,6 +209,7 @@ const Home = {
           completeAction();
         });
       })
+      // If the token is invalid alert the user and redirect to the welcome page
       .catch((error) => {
         console.log(JSON.stringify(jwt));
         alert(error);
