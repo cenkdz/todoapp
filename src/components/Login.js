@@ -11,7 +11,6 @@ const Login = {
                 <label for='email'>Email address</label>
                 <input type='email' id='email' name='email' placeholder='Enter email'>
             </div>
- 
             <div>
                 <label for='password'>Password</label>
                 <input type='password'id='password' name='password' placeholder='Password'>
@@ -46,11 +45,10 @@ const Login = {
         .then((response) => {
           // Setting the token as a cookie
           Utils.setCookie('jwt', response.data.jwt, 1);
-          alert('Successful login ::)');
           window.location.href = '/#/home/';
         })
-        .catch((error) => {
-          alert(`Unsuccessful login :/${error}`);
+        .catch(() => {
+          // ALERT DIV WILL BE HERE
         });
     });
   },

@@ -6,11 +6,11 @@ const Home = {
   render: async () => {
     const view = `
         <div>
-            <input id="addTodo" type="text" placeholder="Please add a todo.">
+            <input id="addTodo" type="text" placeholder="Please add a task.">
         </div>
             <button type="submit" id="add_edit_Button"></button>
             <button id="cancelButton" class="hide">CANCEL</button>
-            <h2>Your To-Dos</h2>
+            <h2>Your Tasks</h2>
             <ul id="todos"></ul>
         `;
     return view;
@@ -47,10 +47,12 @@ const Home = {
         // Add mode activated on page load.
         addMode();
 
+
+
         function clearInput() {
           todoInputContent.value = '';
         }
-
+        
         // Called when user clicks the edit button.
         // Adjusts button appeareance(visibility,text) accordingly.
         function editMode() {
@@ -131,11 +133,14 @@ const Home = {
             const fragments = [];
 
             todoList.forEach((todo) => {
-              todoHtml = `<li class="todo">${todo.content}<div class="editDiv">
-              <button class="edit">Edit</button>
-              <button class="delete">Delete</button>
+              todoHtml = `
+              <div>
+              <li class="todo">${todo.content}<div class="editDiv">
+              <button class="edit">EDIT</button>
+              <button class="delete">DELETE</button>
               </div>
               </li>
+              </div>
               `;
 
               const documentFragment = document.createRange().createContextualFragment(todoHtml);
@@ -168,7 +173,7 @@ const Home = {
             })
             .catch((error) => {
               console.log(error);
-              alert('Todo couldn\'t be edited!');
+              // ALERT DIV WILL BE HERE
             });
         }
         // Decides which function is going to be executed according to the current mode
@@ -212,7 +217,7 @@ const Home = {
       // If the token is invalid alert the user and redirect to the welcome page
       .catch((error) => {
         console.log(JSON.stringify(jwt));
-        alert(error);
+        // ALERT DIV WILL BE HERE
         window.location.href = '/#/';
       });
   },

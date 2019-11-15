@@ -53,6 +53,27 @@ const Utils = {
     document.getElementById('homeLink').classList.remove('hide');
     document.getElementById('updateAccount').classList.remove('hide');
   },
+
+  pass_validation(pass, mx, my) {
+    const passLen = pass.value.length;
+    if (passLen === 0 || passLen >= my || passLen < mx) {
+      alert(`Password should not be empty / length be between ${mx} to ${my}`);
+      pass.focus();
+      return false;
+    }
+    return true;
+  },
+
+  validateEmail(email) {
+    const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (email.value.match(mailformat)) {
+      return true;
+    }
+    alert('You have entered an invalid email address!');
+    email.focus();
+    return false;
+  },
+
 };
 
 export default Utils;

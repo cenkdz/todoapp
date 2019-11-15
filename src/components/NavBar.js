@@ -20,7 +20,6 @@ const Navbar = {
 
     // Called when user clicks logout
     logoutB.addEventListener('click', () => {
-      alert('You are logged out!');
     });
   },
 

@@ -2,6 +2,7 @@ body {
     background-color: #121212;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     text-align: center;
+    font-weight: lighter;
 }
 
 #page_container {
@@ -14,16 +15,28 @@ body {
     width: 90%;
 }
 
+#addTodo {
+    font-size: inherit;
+    text-align: center;
+    background-color: #121212;
+    border-width: 0px;
+    border-bottom-width: 0.9px;
+    color: white;
+    margin-bottom: 5px;
+    font-weight: lighter;
+    width: 50%;
+    margin-bottom: 25px;
+}
+
 #addTodo[placeholder] {
     text-align: center;
 }
 
-h1,
-h2,
-label {
+h1, h2, label {
     border-color: #121212;
     background-color: #121212;
     color: #f2f2f2;
+    font-weight: lighter;
 }
 
 ul {
@@ -32,7 +45,6 @@ ul {
 }
 
 li {
-    font-weight: 400;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -40,11 +52,20 @@ li {
     padding: 10px 20px;
     color: #FFFFFF;
     border: 2px solid #121212;
-    border-radius: 5px;
     margin-bottom: 10px;
     margin-top: 15px;
     background: #121212;
     transition: all 0.75s;
+    font-weight: lighter;
+    border-bottom: 1px solid;
+}
+
+li:hover{
+    transition-duration: 1.5s;
+    background-color: white;
+    color: black;
+    font-weight: bolder;
+    border-radius: 6px;
 }
 
 .addCompleteB::before {
@@ -56,8 +77,15 @@ li {
 }
 
 button {
-    font-weight: 100;
-    background-color: #FFFFFF;
+    background-color: #121212;
+    color: #FFFFFF;
+    border: 1px solid #f2f2f2;
+    border-radius: 8px;
+    font-weight: lighter;
+    padding: 2px 10px;
+    width: 62.5781px;
+    margin: 2px;
+    cursor: pointer;
 }
 
 .hide {
@@ -67,32 +95,39 @@ button {
 #navbar {
     width: 100%;
     overflow: hidden;
-    background-color: #121212;;
+    background-color: #121212;
+    font-weight: lighter;
 }
-  
+
 #navbar a {
     float: left;
     color: #f2f2f2;
     text-align: center;
     padding: 14px;
     text-decoration: none;
+    font-weight: lighter;
 }
-  
+
+#navbar a:hover {
+    transition-duration: 0.3s;
+    font-weight: bolder;
+}
+
 #page_container {
     padding: 16px;
 }
-  
+
 .sticky {
     position: fixed;
     top: 0;
     width: 100%;
 }
 
-.sticky + #page_container {
+.sticky+#page_container {
     padding-top: 60px;
-} 
+}
 
-#logout, #login{
+#logout, #login {
     position: absolute;
     right: 20px;
 }
@@ -100,4 +135,8 @@ button {
 #register {
     position: absolute;
     right: 80px;
+}
+
+button.edit {
+    width: 62.5781px;
 }
