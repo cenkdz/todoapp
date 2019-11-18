@@ -5,36 +5,29 @@ body {
     font-weight: lighter;
 }
 
-#page_container {
-    display: inline-block;
-    right: 0;
-    left: 0;
-    margin-right: auto;
-    margin-left: auto;
-    min-height: 10em;
-    width: 90%;
+textarea {
+    resize: none;
 }
 
 #addTodo {
-    font-size: inherit;
     text-align: center;
     background-color: #121212;
     border-width: 0px;
     border-bottom-width: 0.9px;
     color: white;
-    margin-bottom: 5px;
     font-weight: lighter;
     width: 50%;
-    margin-bottom: 25px;
+    margin-bottom: 2%;
+    border-bottom: 1px solid;
+    margin-top: 2%;
 }
 
 #addTodo[placeholder] {
-    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: inherit;
 }
 
-h1, h2, label {
-    border-color: #121212;
-    background-color: #121212;
+h1, h2, h3, h4, label {
     color: #f2f2f2;
     font-weight: lighter;
 }
@@ -48,23 +41,17 @@ li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    list-style: none;
     padding: 10px 20px;
     color: #FFFFFF;
-    border: 2px solid #121212;
-    margin-bottom: 10px;
     margin-top: 15px;
-    background: #121212;
     transition: all 0.75s;
-    font-weight: lighter;
     border-bottom: 1px solid;
+    font-weight: lighter;
 }
 
-li:hover{
-    transition-duration: 1.5s;
+li:hover {
     background-color: white;
     color: black;
-    font-weight: bolder;
     border-radius: 6px;
 }
 
@@ -82,7 +69,7 @@ button {
     border: 1px solid #f2f2f2;
     border-radius: 8px;
     font-weight: lighter;
-    padding: 2px 10px;
+    padding: 5px 10px;
     width: 62.5781px;
     margin: 2px;
     cursor: pointer;
@@ -96,16 +83,13 @@ button {
     width: 100%;
     overflow: hidden;
     background-color: #121212;
-    font-weight: lighter;
 }
 
 #navbar a {
     float: left;
     color: #f2f2f2;
-    text-align: center;
     padding: 14px;
     text-decoration: none;
-    font-weight: lighter;
 }
 
 #navbar a:hover {
@@ -113,30 +97,91 @@ button {
     font-weight: bolder;
 }
 
-#page_container {
-    padding: 16px;
-}
-
-.sticky {
-    position: fixed;
-    top: 0;
-    width: 100%;
-}
-
-.sticky+#page_container {
-    padding-top: 60px;
-}
-
 #logout, #login {
     position: absolute;
-    right: 20px;
+    right: 2%;
 }
 
 #register {
     position: absolute;
-    right: 80px;
+    right: 8%;
 }
 
-button.edit {
-    width: 62.5781px;
+@media (min-width: 20rem) {
+    /* 20*16px = 320px */
+    body {
+        font-size: 100%;
+    }
+    /* 200% of 16px = 32px */
 }
+
+@media (min-width: 30em) {
+    /* 30*16px = 480px */
+    body {
+        font-size: 150%;
+    }
+    /* 300% of 16px = 30px */
+}
+
+.wPageE {
+    animation-duration: 1s;
+    animation-name: slidein;
+    color: #f2f2f2;
+}
+
+@keyframes slidein {
+    from {
+        margin-left: 100%;
+        width: 300%;
+    }
+    to {
+        margin-left: 0%;
+        width: 100%;
+    }
+}
+
+@keyframes slideout {
+    from {
+        width: 100%;
+    }
+    to {
+        margin-right: 100%;
+        width: 300%;
+    }
+}
+
+#appName.wPageE {
+    animation-duration: 1.5s;
+    animation-name: slidein;
+}
+
+#appName {
+    font-weight: bolder;
+}
+
+#responseDiv {
+    margin: auto;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(18, 18, 18,0.6);  /* Fallback color */
+  }
+  
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #121212;
+    color: #f2f2f2;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #ffffff;
+    width: 20%; /* Could be more or less, depending on screen size */
+    border-radius: 8px;
+  }

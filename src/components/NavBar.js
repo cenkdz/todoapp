@@ -16,11 +16,7 @@ const Navbar = {
   after_render: async () => {
     // After the page is rendered all the functions are stated afterwards
 
-    const logoutB = document.getElementById('logout');
 
-    // Called when user clicks logout
-    logoutB.addEventListener('click', () => {
-    });
   },
 
 };

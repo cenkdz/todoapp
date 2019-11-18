@@ -6,12 +6,22 @@ const Home = {
   render: async () => {
     const view = `
         <div>
-            <input id="addTodo" type="text" placeholder="Please add a task.">
+            <textarea id="addTodo" type="text" placeholder="Please add a task."></textarea>
         </div>
             <button type="submit" id="add_edit_Button"></button>
             <button id="cancelButton" class="hide">CANCEL</button>
             <h2>Your Tasks</h2>
             <ul id="todos"></ul>
+            <div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <p>Are you sure?</p>
+    <button id="yesB">Yes</button>
+    <button id="noB">No</button>
+  </div>
+
+</div>
         `;
     return view;
   },
@@ -22,7 +32,7 @@ const Home = {
 
     // Validate user token.
     axios.post('http://localhost/todoapi/api/validate_token.php', JSON.stringify({ jwt }))
-    // If it's valid continue...
+      // If it's valid continue...
       .then((response) => {
         // Change navbar element visibilities.
         Utils.loggedinNavbar();
@@ -40,6 +50,10 @@ const Home = {
         const todoInputContent = document.getElementById('addTodo');
         const addEditTodoButton = document.getElementById('add_edit_Button');
         const cancelButton = document.getElementById('cancelButton');
+        const yesButton = document.getElementById('yesB');
+        const noButton = document.getElementById('noB');
+        // Get the modal
+        const modal = document.getElementById('myModal');
 
         // Assigning the loggedin user_id according to the response.
         currentUserId = response.data.data.id;
@@ -48,11 +62,10 @@ const Home = {
         addMode();
 
 
-
         function clearInput() {
           todoInputContent.value = '';
         }
-        
+
         // Called when user clicks the edit button.
         // Adjusts button appeareance(visibility,text) accordingly.
         function editMode() {
@@ -82,21 +95,32 @@ const Home = {
         }
         // Called when user clicks the delete button and deletes it from the database
         function deleteTodo(id) {
-          const userResponse = confirm('Are you sure ?');
-          if (userResponse === true) {
+          modal.style.display = 'block';
+          yesButton.addEventListener('click', () => {
             axios.post('http://localhost/todoapi/api/product/delete.php',
               JSON.stringify({
                 id,
               }))
               .then((response) => {
                 console.log(response);
+                modal.style.display = 'none';
                 showTodos();
               })
               .catch((error) => {
                 console.log(error);
               });
-          }
+          });
+
+          noButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+          });
         }
+
+        window.onclick = function (event) {
+          if (event.target === modal) {
+            modal.style.display = 'none';
+          }
+        };
         // Called when the user changes the todo and presses edit button(the one below input)
         function editTodo(body) {
           console.log(body);
@@ -205,7 +229,7 @@ const Home = {
         });
 
         todoInputContent.addEventListener('keyup', (event) => {
-          if (event.keyCode === 13) {
+          if (event.keyCode === 13 && event.shiftKey) {
             completeAction();
           }
         });

@@ -57,7 +57,6 @@ const Utils = {
   pass_validation(pass, mx, my) {
     const passLen = pass.value.length;
     if (passLen === 0 || passLen >= my || passLen < mx) {
-      alert(`Password should not be empty / length be between ${mx} to ${my}`);
       pass.focus();
       return false;
     }
@@ -69,7 +68,6 @@ const Utils = {
     if (email.value.match(mailformat)) {
       return true;
     }
-    alert('You have entered an invalid email address!');
     email.focus();
     return false;
   },

@@ -5,31 +5,25 @@ const UpdateAccount = {
 // Render html
   render: async () => {
     const view = `
+    <div>
       <h2>Update Account</h2>
-          <div>
               <label for="firstname">Firstname</label>
               <input type="text" name="firstname" id="firstname" required/>
-          </div>
-          <div>
               <label for="lastname">Lastname</label>
               <input type="text" name="lastname" id="lastname" required/>
-          </div>
-          <div>
+
               <label for="email">Email</label>
               <input type="email" name="email" id="email" required/>
-          </div>
-          <div>
               <label for="password">Password</label>
               <input type="password" name="password" id="password" />
-          </div>
           <button id="updateAccountB" class='btn btn-primary'>
               Save Changes
           </button>
           <br>
           <br>
           <br>
-
           <div id="responseDiv">
+          </div>
           </div>
           `;
     return view;
@@ -68,11 +62,17 @@ const UpdateAccount = {
             .then((uResponse) => {
               html = '<h2>You have successfully updated your credentials.</h2>';
               responseDiv.innerHTML = html;
+              window.setTimeout(() => {
+                responseDiv.style.display = 'none';
+              }, 1500);
               Utils.setCookie('jwt', uResponse.data.jwt, 1);
             })
             .catch(() => {
               html = '<h2>We were unable to update your account.</h2>';
               responseDiv.innerHTML = html;
+              window.setTimeout(() => {
+                responseDiv.style.display = 'none';
+              }, 1500);
             });
         });
       })
