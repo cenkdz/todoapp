@@ -20,8 +20,8 @@ const Home = {
     <button id="yesB">Yes</button>
     <button id="noB">No</button>
   </div>
-
 </div>
+<button id="topB"><i class="up"></i></button> 
         `;
     return view;
   },
@@ -52,6 +52,8 @@ const Home = {
         const cancelButton = document.getElementById('cancelButton');
         const yesButton = document.getElementById('yesB');
         const noButton = document.getElementById('noB');
+        const goTopB = document.getElementById('topB');
+
         // Get the modal
         const modal = document.getElementById('myModal');
 
@@ -61,6 +63,22 @@ const Home = {
         // Add mode activated on page load.
         addMode();
 
+        function scrollFunction() {
+          if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            goTopB.style.display = 'block';
+          } else {
+            goTopB.style.display = 'none';
+          }
+        }
+
+        window.onscroll = function () { scrollFunction(); };
+
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+          document.body.scrollTop = 0; // For Safari
+          document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
 
         function clearInput() {
           todoInputContent.value = '';
@@ -190,6 +208,7 @@ const Home = {
         // Called when user presses edit button and gets the clicked todo from the database
         // into the input field.
         function readOneTodo(id) {
+          todoInputContent.focus();
           axios.get(`http://localhost/todoapi/api/product/read_one.php?id=${id}`)
             .then((response) => {
               console.log(response);
@@ -236,6 +255,10 @@ const Home = {
 
         addEditTodoButton.addEventListener('click', () => {
           completeAction();
+        });
+
+        goTopB.addEventListener('click', () => {
+          topFunction();
         });
       })
       // If the token is invalid alert the user and redirect to the welcome page
