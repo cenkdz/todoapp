@@ -5,15 +5,23 @@ const Register = {
   // Render html
   render: async () => `
       <h1>Register</h1>
-      <div>
+      <div id="registerDiv">
+          <div class="nameDiv">
           <label for="firstname">Firstname</label>
-          <input type="text" id="firstname" id="firstname" size="30" required />
+          <input type="text" id="firstname" size="30" required />
+          </div>
+          <div class="lastnameDiv">
           <label for="lastname">Lastname</label>
-          <input type="text" id="lastname" id="lastname" size="30" required />
+          <input type="text"  id="lastname" size="30" required />
+          </div>
+          <div class="emailDiv">
           <label for="email">Email</label>
-          <input type="email" id="email" id="email" size="30" required />
+          <input type="email" id="email" size="30" required />
+          </div>
+          <div class="passwordDiv">
           <label for="password">Password</label>
-          <input type="password" id="password" id="password" size="30" required />
+          <input type="password" id="password" size="30" required />
+          </div>
       <button id="registerB">Register</button>
       <br>
       <br>
@@ -34,18 +42,41 @@ const Register = {
     const passwordI = document.getElementById('password');
     let html;
 
-    function formValidation() {
-      if (Utils.pass_validation(passwordI, 6, 30)) {
-        if (Utils.validateEmail(emailI)) {
-          return true;
-        }
+    function validateRegister() {
+      responseDiv.innerHTML = '';
+      if (Utils.isEmpty(firstnameI)) {
+        firstnameI.setAttribute('placeholder', 'Please fill out all the fields');
       }
-      return false;
+
+      if (Utils.isEmpty(lastnameI)) {
+        lastnameI.setAttribute('placeholder', 'Please fill out all the fields');
+      }
+
+      if (Utils.isEmpty(emailI)) {
+        emailI.setAttribute('placeholder', 'Please fill out all the fields');
+      }
+
+      if (Utils.isEmpty(passwordI)) {
+        passwordI.setAttribute('placeholder', 'Please fill out all the fields');
+      }
+
+      if (!Utils.pass_validation(passwordI, 6, 30)) {
+        responseDiv.insertAdjacentHTML('beforeend', '<h6>Password length should be min 6 max 30</h4>');
+      }
+      if (!Utils.validateEmail(emailI)) {
+        responseDiv.insertAdjacentHTML('beforeend', '<h6>You have entered an invalid e-mail address</h4>');
+      }
+
+      if (firstnameI.value !== '' && lastnameI.value !== '' && !Utils.isEmpty(emailI) && !Utils.isEmpty(passwordI) && Utils.pass_validation(passwordI, 6, 30) && Utils.validateEmail(emailI)) {
+        return true;
+      }
     }
+
 
     // Called when user clicks register
     registerB.addEventListener('click', () => {
-      const validStatus = formValidation();
+      const validStatus = validateRegister();
+
 
       if (validStatus === true) {
         const userObject = {
@@ -64,7 +95,7 @@ const Register = {
           })
           .catch(() => {
             // ALERT DIV WILL BE HERE
-            html = '<h2>We were unable to create your account.</h2>';
+            html = '<h4>We were unable to create your account.</h4>';
             responseDiv.innerHTML = html;
           });
       }

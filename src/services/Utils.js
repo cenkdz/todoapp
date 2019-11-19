@@ -52,6 +52,7 @@ const Utils = {
     document.getElementById('logout').classList.remove('hide');
     document.getElementById('homeLink').classList.remove('hide');
     document.getElementById('updateAccount').classList.remove('hide');
+    document.getElementById('changeTheme').classList.remove('hide');
   },
 
   pass_validation(pass, mx, my) {
@@ -65,10 +66,19 @@ const Utils = {
 
   validateEmail(email) {
     const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (email.value.match(mailformat)) {
-      return true;
+    if (email.value !== '') {
+      if (email.value.match(mailformat)) {
+        return true;
+      }
     }
     email.focus();
+    return false;
+  },
+
+  isEmpty(element) {
+    if (element.value === '') {
+      return true;
+    }
     return false;
   },
 

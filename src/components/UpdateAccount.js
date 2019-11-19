@@ -51,29 +51,32 @@ const UpdateAccount = {
         emailI.value = vResponse.data.data.email;
 
         updateB.addEventListener('click', () => {
-          const newUserObj = {
-            firstname: firstnameI.value,
-            lastname: lastnameI.value,
-            email: emailI.value,
-            password: passwordI.value,
-            jwt,
-          };
-          axios.post('http://localhost/todoapi/api/update_user.php', JSON.stringify(newUserObj))
-            .then((uResponse) => {
-              html = '<h2>You have successfully updated your credentials.</h2>';
-              responseDiv.innerHTML = html;
-              window.setTimeout(() => {
-                responseDiv.style.display = 'none';
-              }, 1500);
-              Utils.setCookie('jwt', uResponse.data.jwt, 1);
-            })
-            .catch(() => {
-              html = '<h2>We were unable to update your account.</h2>';
-              responseDiv.innerHTML = html;
-              window.setTimeout(() => {
-                responseDiv.style.display = 'none';
-              }, 1500);
-            });
+          if (passwordI.value !== '' && firstnameI.value !== '' && lastnameI.value !== '' && emailI.value !== '') {
+            const newUserObj = {
+              firstname: firstnameI.value,
+              lastname: lastnameI.value,
+              email: emailI.value,
+              password: passwordI.value,
+              jwt,
+            };
+            axios.post('http://localhost/todoapi/api/update_user.php', JSON.stringify(newUserObj))
+              .then((uResponse) => {
+                html = '<h2>You have successfully updated your credentials.</h2>';
+                responseDiv.innerHTML = html;
+                window.setTimeout(() => {
+                  responseDiv.style.display = 'none';
+                }, 1500);
+                Utils.setCookie('jwt', uResponse.data.jwt, 1);
+              })
+              .catch(() => {
+                html = '<h3>We were unable to update your account.</h3>';
+                responseDiv.innerHTML = html;
+                window.setTimeout(() => {
+                  responseDiv.style.display = 'none';
+                }, 1500);
+              });
+          }
+          responseDiv.innerHTML = '<h3>Please fill out all the information</h3>';
         });
       })
       .catch(() => {

@@ -22,7 +22,7 @@ const Login = {
         `;
     return view;
   },
-  after_render: async () => {
+  after_render: () => {
     // After the page is rendered all the functions are stated afterwards
 
     // Removes jwt
@@ -36,15 +36,23 @@ const Login = {
 
     function formValidation() {
       responseDiv.innerHTML = '';
+
+      if (Utils.isEmpty(emailI)) {
+        emailI.setAttribute('placeholder', 'Please enter your email');
+      }
+
+      if (Utils.isEmpty(passwordI)) {
+        passwordI.setAttribute('placeholder', 'Please enter your password');
+      }
       if (!Utils.pass_validation(passwordI, 6, 30)) {
         const passwordCheck = `
-        <h4>Password should not be empty / length should be between 6 and 30</h4>
+        <h4>Length should be between 6 and 30.</h4>
         `;
         responseDiv.insertAdjacentHTML('beforeend', passwordCheck);
       }
       if (!Utils.validateEmail(emailI)) {
         const emailCheck = `
-        <h4>You have entered an invalid email address</h4>
+        <h4>You have entered an invalid email address.</h4>
         `;
         responseDiv.insertAdjacentHTML('beforeend', emailCheck);
       }
@@ -65,6 +73,7 @@ const Login = {
         // Returns a user-specific genereated jwt token and sets the token as a cookie
         axios.post('http://localhost/todoapi/api/login.php', JSON.stringify(loginObject))
           .then((response) => {
+            console.log(response);
             // Setting the token as a cookie
             Utils.setCookie('jwt', response.data.jwt, 1);
             window.location.href = '/#/home/';
