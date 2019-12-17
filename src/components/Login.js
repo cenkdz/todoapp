@@ -32,7 +32,6 @@ const Login = {
     const passwordI = document.getElementById('password');
     const loginB = document.getElementById('loginB');
     const responseDiv = document.getElementById('responseDiv');
-    let html;
 
     function formValidation() {
       responseDiv.innerHTML = '';

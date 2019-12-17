@@ -1,7 +1,5 @@
 node_modules
 b1.jpg
-package-lock.json
-package.json
 .vscode/launch.json
 api/product/update.php
 api/product/search.php
